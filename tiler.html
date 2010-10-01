@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Geoportail</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" type="image/x-icon" href="http://api.ign.fr/geoportail/api/doc/examples/img/favicon.ico" />
+    
+    <script type="text/javascript" src="http://api.ign.fr/geoportail/api?v=1.1&amp;key=2619594542781480931&amp;instance=viewer&amp;includeEngine=true&amp;"><!-- --></script>
+    
+    <script type="text/javascript">
+    <!--
+    // the viewer variable is declared by the API through the instance parameter
+    viewer= null;
+    var kbControl= null;
+		var w3cGeolocation= navigator.geolocation;
+		var watchId;
+		var firstWatch=null;
+		var autoResize=true;
+		var mapHeight=1024;
+		var mapWidth=1024;
+
+
+    function positionFailure(r) {
+        alert(OpenLayers.i18n('position.location.failed'));
+        return;
+    }
+
+    function findLocation() {
+				if (w3cGeolocation) {//F3.5+
+						w3cGeolocation.getCurrentPosition(handlePosition, positionFailure);
+						//w3cGeolocation.watchPosition(handlePosition, positionFailure);
+            return;
+        }
+				alert("Need Firefox 3.5+");
+    }
+
+    function handlePosition(p) {
+      if (w3cGeolocation) {
+				if (!firstWatch) {
+					loadInterface();
+				}
+				ll= new OpenLayers.LonLat(p.coords.longitude, p.coords.latitude);
+		    ll= ll.transform(OpenLayers.Projection.CRS84, viewer.getMap().getProjection());
+      	viewer.getMap().setCenter(ll);
+      }
+    }
+
+		function toggleAutoResize() {
+			autoResize = ! autoResize;
+			if (autoResize) {
+				document.getElementById("toggleAutoResize").innerHTML = "Fixed";
+				window.onresize = refreshSize;
+			} else {
+				document.getElementById("toggleAutoResize").innerHTML = "Auto";
+				window.onresize = null;
+			}
+			refreshSize();
+		}
+
+		function refreshSize() { 
+			if (autoResize) { 
+				setSize(window.innerWidth, window.innerHeight);
+			} else {
+				setSize(mapWidth,mapHeight);
+			}
+		}
+
+		function changeSize(w,h) {
+			if (!autoResize) {
+				if ((mapWidth + w > 0) && (mapHeight + h > 0)) {
+					mapWidth = mapWidth + w;
+					mapHeight = mapHeight + h;
+					refreshSize();
+				}
+			}
+		}
+		
+		function setSize(w,h) {
+			viewer.setSize(w,h);
+			document.getElementById("mapWidth").innerHTML = w;
+			document.getElementById("mapHeight").innerHTML = h;
+		}
+
+		function showToolbox(b) {
+			document.getElementById("toolbox").style.display = (b)?"":"none";
+		} 
+		function onMapClick(e) {
+				showToolbox(1);
+		//		var pos = viewer.getMap().getLonLatFromViewPortPx(e.xy);
+		//		pos.transform(viewer.getMap().getProjection(), OpenLayers.Projection.CRS84); 
+		}
+		function onMapMove(e) {
+			  var p0 = new OpenLayers.Pixel(0,0);
+				var viewerDivMapCell = OpenLayers.Util.getElement('viewerDivMapCell');
+			  var p1 = new OpenLayers.Pixel(viewerDivMapCell.style.width, viewerDivMapCell.style.height);
+			  var pos0 = viewer.getMap().getLonLatFromViewPortPx(p0).transform(viewer.getMap().getProjection(), OpenLayers.Projection.CRS84); 
+			  var pos1 = viewer.getMap().getLonLatFromViewPortPx(p1).transform(viewer.getMap().getProjection(), OpenLayers.Projection.CRS84); 
+				OpenLayers.Util.getElement('northValue').innerHTML = pos0.lat;
+				OpenLayers.Util.getElement('southValue').innerHTML = pos1.lat;
+				OpenLayers.Util.getElement('eastValue').innerHTML = pos1.lon;
+				OpenLayers.Util.getElement('westValue').innerHTML = pos0.lon;
+    }
+
+    function loadInterface() {
+			firstWatch=1;
+			document.getElementById("toggleAutoResize").innerHTML = (autoResize)?"Fixed":"Auto";
+/*
+			var viewerDiv = OpenLayers.Util.getElement('viewerDiv');
+			viewerDiv.style.width = mapWidth + "px";
+			viewerDiv.style.height = mapHeight + "px";
+*/
+      if (typeof(geoportalLoadviewer)!='function') {
+        OpenLayers.Console.error(OpenLayers.i18n('new.instance.failed'));
+        return;
+      }
+      geoportalLoadviewer("viewerDiv", "mini"/*, null, null, null, '/geoportail/api/xmlproxy'+'?url='*/);
+      if (!viewer) {
+        OpenLayers.Console.error(OpenLayers.i18n('new.instance.failed'));
+        return;
+      }
+      kbControl= viewer.getMap().getControlsByClass(OpenLayers.Control.KeyboardDefaults.prototype.CLASS_NAME)[0];
+      viewer.addGeoportalLayer( 'GEOGRAPHICALGRIDSYSTEMS.MAPS:WMSC', {opacity: 1.0} );
+			viewer.getMap().setCenter(viewer.viewerOptions.defaultCenter,viewer.viewerOptions.defaultZoom);
+			refreshSize();
+			viewer.getMap().events.register("click", viewer.getMap(), onMapClick);
+			viewer.getMap().events.register("move", viewer.getMap(), onMapMove);
+		} 
+
+    function initGeoportalMap() {
+			//findLocation();
+			loadInterface();
+		}
+      -->
+    </script>
+    <!-- import OpenLayers/Geoportal CSS to ease overloading their styles : -->
+    <!-- OpenLayers :-->
+    <link id="__OpenLayersCss__" href="http://api.ign.fr/geoportail/api/js/1.1/theme/default/style.css" type="text/css" rel="stylesheet"/>
+    <!--[if lte IE 6]>
+    <link id="__IE6OpenLayersCss__" href="http://api.ign.fr/geoportail/api/js/1.1/theme/default/ie6-style.css" type="text/css" rel="stylesheet"/>
+    <![endif]-->
+    <!-- Geoportal :-->
+    <link id="__GeoportalCss__" href="http://api.ign.fr/geoportail/api/js/1.1/theme/geoportal/style.css" type="text/css" rel="stylesheet"/>
+    <style type="text/css">
+    <!--
+    div#viewerDiv {
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				width: 250px;
+				height: 250px;
+        background-color: white;
+        background-image:url(http://api.ign.fr/geoportail/api/js/1.1/theme/geoportal/img/loading.gif);
+        background-position:center center;
+        background-repeat:no-repeat;
+    }
+
+		.gpMainMapCell, .gpMainMap { border: none; }
+
+		div#toolbox {
+			position: absolute;
+			background: yellow;
+		}	
+      -->
+    </style>
+  </head>
+  <body>
+		<div id="viewerDiv"></div>
+		<div id="toolbox">
+			<table><tbody>
+				<tr>
+					<td>Width</td>
+					<td id="mapWidth"></td>
+				</tr><tr>
+					<td>Height</td>
+					<td id="mapHeight"></td>
+				</tr><tr>
+					<td>North</td>
+					<td id="northValue"></td>
+				</tr><tr>
+					<td>South</td>
+					<td id="southValue"></td>
+				</tr><tr>
+					<td>East</td>
+					<td id="eastValue"></td>
+				</tr><tr>
+					<td>West</td>
+					<td id="westValue"></td>
+				</tr>
+			</tbody></table>
+			<div align="center">
+				<table><tbody>
+				<tr>
+				<td/><td align="center">
+				<button class="changeSizeButtons" onclick="changeSize(0,1024)">+</button><br/>
+				</td><td/>
+				</tr><tr>
+				<td>
+				<button class="changeSizeButtons" onclick="changeSize(-1024,0)">-</button><br/>
+				</td><td>
+				<button id="toggleAutoResize" onclick="toggleAutoResize()">Auto</button><br/>
+				</td><td>
+				<button class="changeSizeButtons" onclick="changeSize(1024,0)">+</button><br/>
+				</td>
+				</tr><tr>
+				<td/><td align="center">
+				<button class="changeSizeButtons" onclick="changeSize(0,-1024)">-</button><br/>
+				</td><td/>
+				</tr>
+				</tbody></table>
+				<button onclick="findLocation()">Center on your location</button><br/>
+				<button onclick="showToolbox(0)">Hide toolbox</button><br/>
+			</div>
+		</div>
+  </body>
+</html>
