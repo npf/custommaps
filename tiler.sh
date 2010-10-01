@@ -5,7 +5,6 @@
 #SOUTH=45.015576018020703
 #EAST=5.886258718271238
 #WEST=5.565537433019793
-MAXTILE=10
 TILESIZE=1024
 JPEGQUALITY=75
 DOC=doc.kml
@@ -90,10 +89,6 @@ fi
 IMAGESIZE=$(jhead -c $IMAGE | grep -o "[[:digit:]]\+x[[:digit:]]\+");
 IMAGEWIDTH=${IMAGESIZE%x*}
 IMAGEHEIGHT=${IMAGESIZE#*x}
-if [ $((IMAGEWIDTH / TILESIZE)) -gt $MAXTILE -o $((IMAGEHEIGHT / TILESIZE)) -gt $MAXTILE ]; then
-	echo "Source image width or height too large for the tile size (max $((10 * TILESIZE)))"
-	exit 1
-fi
 IMAGEPREFIX=${IMAGE%.*}
 [ -z "$DEST" ] && DEST=${IMAGEPREFIX##*/}
 
