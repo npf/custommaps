@@ -2,9 +2,9 @@
 
 function tilecount {
 	if which unzip >/dev/null 2>&1; then
-		n=$(unzip -l $1 | grep -e "\.\(jpg\|jpeg\|JPG\|JPEG\)$" | wc -l)
+		n=$(unzip -l "$1" | grep -e "\.\(jpg\|jpeg\|JPG\|JPEG\)$" | wc -l)
 	elif which miniunzip >/dev/null 2>&1; then
-		n=$(miniunzip -l $1 | grep -e "\.\(jpg\|jpeg\|JPG\|JPEG\)$" | wc -l)
+		n=$(miniunzip -l "$1" | grep -e "\.\(jpg\|jpeg\|JPG\|JPEG\)$" | wc -l)
 	fi
 	echo $n
 }
@@ -25,13 +25,13 @@ done
 echo "=== Enabled ==="
 T=0
 for f in *.kmz; do
-	t=$(tilecount $f)
+	t=$(tilecount "$f")
 	printf "%4d | %s\n" $t "$f"
 	T=$((T+t))
 done
 echo "=== Disabled ==="
 for f in *.kmz.skip; do
-	t=$(tilecount $f)
+	t=$(tilecount "$f")
 	printf "%4d | %s\n" $t "$f"
 done
 
