@@ -10,20 +10,22 @@ function tilecount {
 }
 
 shopt -s nullglob
-for f in *.kmz; do
-	mv "$f" "$f.skip"
-done
-for f in "$@"; do
-	if [ "${f##*.}" == "kmz" ]; then
-		f=$f.skip
-	fi
-	if [ "${f##*.}" == "skip" ]; then
-		ff=${f%.skip};
-		if [ "${ff##*.}" == "kmz" ]; then
-			mv "$f" "$ff"
+if [ -n "$1" ]; then
+	for f in *.kmz; do
+		mv "$f" "$f.skip"
+	done
+	for f in "$@"; do
+		if [ "${f##*.}" == "kmz" ]; then
+			f=$f.skip
 		fi
-	fi
-done
+		if [ "${f##*.}" == "skip" ]; then
+			ff=${f%.skip};
+			if [ "${ff##*.}" == "kmz" ]; then
+				mv "$f" "$ff"
+			fi
+		fi
+	done
+fi
 
 echo "=== Enabled ==="
 T=0
