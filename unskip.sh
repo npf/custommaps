@@ -14,6 +14,9 @@ for f in *.kmz; do
 	mv "$f" "$f.skip"
 done
 for f in "$@"; do
+	if [ "${f##*.}" == "kmz" ]; then
+		f=$f.skip
+	fi
 	if [ "${f##*.}" == "skip" ]; then
 		ff=${f%.skip};
 		if [ "${ff##*.}" == "kmz" ]; then
