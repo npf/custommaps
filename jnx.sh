@@ -5,10 +5,7 @@
 #SOUTH=45.015576018020703
 #EAST=5.886258718271238
 #WEST=5.565537433019793
-TILESIZE=1024
 JPEGQUALITY=75
-DOC=doc.kml
-FILES=files
 
 usage() {
 	cat <<EOF
@@ -62,9 +59,6 @@ if [ ! -r "$IMAGE" ] || [ -z "$IMAGE" ] || [ -z "$NORTH" ] || [ -z "$SOUTH" ] ||
 	usage	
 fi
 
-IMAGESIZE=$(jhead -c $IMAGE | grep -o "[[:digit:]]\+x[[:digit:]]\+");
-IMAGEWIDTH=${IMAGESIZE%x*}
-IMAGEHEIGHT=${IMAGESIZE#*x}
 IMAGEPREFIX=${IMAGE%.*}
 [ -z "$DEST" ] && DEST=${IMAGEPREFIX##*/}
 
