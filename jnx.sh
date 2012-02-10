@@ -64,7 +64,6 @@ IMAGEPREFIX=${IMAGE%.*}
 
 echo "*** Georeferencing $IMAGE:"
 gdal_translate -a_srs WGS84 -a_ullr $WEST $NORTH $EAST $SOUTH $IMAGE $DEST.tif || exit 1
-fi
 echo "*** Generate JNX $DEST.jnx:"
 map2jnx -n $DEST -q 85 $DEST.tif $DEST.jnx
 
